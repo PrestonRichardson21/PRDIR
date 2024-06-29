@@ -7,20 +7,42 @@
   <body>
     <section class="overlay">
       <h1>API Duplicate Invoice Remover</h1>
-      <form>
-        <label for="SdetFile" accept = ".xml">SDET File</label>
+      <form id ="fileForm" action="/process-files" method="post" enctype="multipart/form-data">
+        <label for="SdetFile" >SDET File:</label>
         <br>
-        <input id="SDET" name="SDET" type="file" >
-        <br>
-        <br>
-        <br>
-        <label for="Duplicate_List" accept = ".xml">Duplicate List</label>
-        <br>
-        <input id="SDET" name="SDET" type="file" >
+        <input id="SDET" name="SDET" type="file" accept = ".xml">
         <br>
         <br>
-        <input type="submit" value="Generate Fixed File">
+        <br>
+        <label for="excelFile" >Excel File:</label>
+        <br>
+        <input id="Excel" name="Excel" type="file" accept = ".xls">
+        <br>
+        <br>
+        <button type="submit" >Generate Fixed File</button>
       </form>
     </section>
+    <script>
+      document.getElementById('fileForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+    
+        // Assuming you want to send the files to the server
+        // You would need to collect the files from the input fields here
+        // and use `fetch` to send them to your server endpoint
+    
+        fetch('/process-files', {
+          method: 'POST',
+          body: new FormData(this), // This example sends the form data
+          // For custom data, you might need to append files manually to FormData
+        })
+        .then(response => response.text())
+        .then(result => {
+          console.log(result); // Handle the response from the server
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      });
+    </script>
   </body>
 </html>
