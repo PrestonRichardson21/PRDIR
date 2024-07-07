@@ -1,48 +1,38 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PRDIR</title>
-    <link rel="stylesheet" href="style.css" type="text/css">
   </head>
   <body>
     <section class="overlay">
       <h1>API Duplicate Invoice Remover</h1>
-      <form id ="fileForm" action="/process-files" method="post" enctype="multipart/form-data">
-        <label for="SdetFile" >SDET File:</label>
-        <br>
-        <input id="SDET" name="SDET" type="file" accept = ".xml">
-        <br>
-        <br>
-        <br>
-        <label for="excelFile" >Excel File:</label>
-        <br>
-        <input id="Excel" name="Excel" type="file" accept = ".xls">
-        <br>
-        <br>
-        <button type="submit" >Generate Fixed File</button>
+
+      <button id="example">Different action</button>
+
+      <form action = "/single" id="dataForm" method="post" enctype="multipart/form-data" >
+        <input type="file" name="image" >
+        <input type="file" name="upload" id="upload" accept=".xlsx, .xls" />
+        <button id="submit">Process Data</button>
+        <script>
+          document.getElementById('submit').addEventListener('click', function(event) {
+              event.preventDefault(); // Prevent the form from submitting in the traditional way
+              fetch('/', { method: 'POST' })
+                  .then(response => response.text()) // Assuming the response is text
+                  .then(data => console.log('Success:', data))
+                  .catch(error => console.error('Error:', error));
+          });
+
+          document.getElementById('example').addEventListener('click', function(event) {
+              event.preventDefault(); // Prevent the form from submitting in the traditional way
+              fetch('/example', { method: 'POST' })
+                  .then(response => response.text()) // Assuming the response is text
+                  .then(data => console.log('Success:', data))
+                  .catch(error => console.error('Error:', error));
+          });
+      </script>
       </form>
     </section>
-    <script>
-      document.getElementById('fileForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent the default form submission
-    
-        // Assuming you want to send the files to the server
-        // You would need to collect the files from the input fields here
-        // and use `fetch` to send them to your server endpoint
-    
-        fetch('/process-files', {
-          method: 'POST',
-          body: new FormData(this), // This example sends the form data
-          // For custom data, you might need to append files manually to FormData
-        })
-        .then(response => response.text())
-        .then(result => {
-          console.log(result); // Handle the response from the server
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-      });
-    </script>
   </body>
 </html>
