@@ -1,35 +1,44 @@
+let run = () =>{
 const fs = require('fs');
 const {parseString, Builder} = require('xml2js');
 const XLSX = require('xlsx');
 let salesInv = [];
-let xml = fs.readFileSync('SDET.xml').toString();
+let xml = fs.readFileSync('./dataFiles/SDET.xml').toString()
 let agvanceData = [];
 let duplicates = [];
 let sdetLoad = () => {
     //Querying the XML input file
 
 
-parseString(xml, function(err, SDET) {
-    if (err) {
-        console.error("Error parsing XML:", err);
-        return;
-    }
-    for (let i = 0; i < SDET.SalesTransactions.LocationSalesDetail.length; i++) {
-        for (let j = 0; j < SDET.SalesTransactions.LocationSalesDetail[i].Invoice.length; j++) {
-            let inv = {};
-            // Wrap the InvoiceNumber and InvoiceTotal in objects with a single string element
-            inv["InvoiceNumber"] = { value: SDET.SalesTransactions.LocationSalesDetail[i].Invoice[j].InvoiceNumber.toString() };
-            inv["InvoiceTotal"] = { value: SDET.SalesTransactions.LocationSalesDetail[i].Invoice[j].InvoiceTotal.toString() };
-            salesInv.push(inv);
+    parseString(xml, function(err, SDET) {
+        
+        if (err) {
+            console.error("Error parsing XML:", err);
+            return;
         }
-    }
-    return salesInv;
-});
+        // Check if SDET.SalesTransactions and LocationSalesDetail exist
+        if (SDET.SalesTransactions && SDET.SalesTransactions.LocationSalesDetail) {
+            for (let i = 0; i < SDET.SalesTransactions.LocationSalesDetail.length; i++) {
+                if (SDET.SalesTransactions.LocationSalesDetail[i].Invoice) { // Check if Invoice exists
+                    for (let j = 0; j < SDET.SalesTransactions.LocationSalesDetail[i].Invoice.length; j++) {
+                        let inv = {};
+                        inv["InvoiceNumber"] = { value: SDET.SalesTransactions.LocationSalesDetail[i].Invoice[j].InvoiceNumber.toString() };
+                        inv["InvoiceTotal"] = { value: SDET.SalesTransactions.LocationSalesDetail[i].Invoice[j].InvoiceTotal.toString() };
+                        salesInv.push(inv);
+                    }
+                }
+            }
+        } else {
+            console.error("Expected XML structure not found.");
+        }
+        return salesInv;
+    });
 };
+
 
 let excelLoad = () => {
 //Loading the Agvance Data file 
-const workbook = XLSX.readFile('AgvanceTickets4PR.xlsx');
+const workbook = XLSX.readFile('./dataFiles/AgvanceTickets-100.xls');
 
 const sheetNames = workbook.SheetNames;
 const sheet = workbook.Sheets[sheetNames[0]]; // Assuming you want the first sheet
@@ -70,8 +79,10 @@ for(let i = 0; i < salesInv.length; i++){
 console.log(duplicates);
 //  Write the modified content back to the file
 fs.writeFileSync('test.xml', xml, 'utf8');
+duplicates = [];
 };
-let run = () =>{
+
+    
     console.log('Hello World');
     sdetLoad(); 
     excelLoad();
