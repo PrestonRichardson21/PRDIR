@@ -27,9 +27,9 @@ app.post('/', multipleUpload, (req, res) => {
     if (req.files && req.files.salesFile && req.files.salesFile.length > 0) {
 
     console.log(req.file);
-    run(); 
     console.log('run() function was called')
     res.send("File uploaded & run() function was called");
+    run(); 
     }else{
         res.send("File not uploaded");
     }
