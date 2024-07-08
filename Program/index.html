@@ -11,14 +11,17 @@
 
       <button id="example">Different action</button>
 
-      <form action = "/single" id="dataForm" method="post" enctype="multipart/form-data" >
-        <input type="file" name="image" >
-        <input type="file" name="upload" id="upload" accept=".xlsx, .xls" />
+      <form action = "/" id="dataForm" method="post" enctype="multipart/form-data" >
+        <input type="file" name="salesFile" accept = ".xml" >
+        <input type="file" name="excelFile" id="excelFile" accept=".xlsx, .xls" />
         <button id="submit">Process Data</button>
         <script>
           document.getElementById('submit').addEventListener('click', function(event) {
-              event.preventDefault(); // Prevent the form from submitting in the traditional way
-              fetch('/', { method: 'POST' })
+              event.preventDefault();
+               var formData = new FormData(document.getElementById('dataForm')); // Prevent the form from submitting in the traditional way
+              fetch('/', { method: 'POST',
+                  body: formData
+              })
                   .then(response => response.text()) // Assuming the response is text
                   .then(data => console.log('Success:', data))
                   .catch(error => console.error('Error:', error));
