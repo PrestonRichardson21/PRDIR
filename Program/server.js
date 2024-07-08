@@ -11,17 +11,28 @@ const { run } = require ('./Functions.js');
 
 const fileStorageEngine = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, './images');
+        cb(null, './dataFiles');
     },
     filename: (req, file, cb) => {
         cb(null, file.originalname);
     },
 });
-const upload = multer({ storage: fileStorageEngine });
 
-app.post('/single', upload.single('image'), (req, res) => {
+const upload = multer({ storage: fileStorageEngine });
+const multipleUpload = upload.fields([
+    { name: 'salesFile', maxCount: 1 },
+    { name: 'excelFile', maxCount: 1 }
+  ]);
+app.post('/', multipleUpload, (req, res) => {
+    if (req.files && req.files.salesFile && req.files.salesFile.length > 0) {
+
     console.log(req.file);
-    res.send('File uploaded');
+    run(); 
+    console.log('run() function was called')
+    res.send("File uploaded & run() function was called");
+    }else{
+        res.send("File not uploaded");
+    }
 });
 
 app.use(express.static('Program'));
@@ -55,21 +66,14 @@ const server = http.createServer((req, res) => {
     // );
     } else if (pathname === '/' && method === 'POST') {
         run();
-    } else if (pathname === '/example' && method === 'POST') {
-        // Do something else
-        res.writeHead(404, {
-            'Content-type': 'text/html',
-        });
-        res.end('<h1>Example ran</h1>');
-    } else {
+    }  else {
         res.writeHead(200, {'Content-type': 'text/html'});
         res.end('<h1>Page not found</h1>');
     }
 });
 
 app.post('/', (req, res) => {
-    run(); // Call the run function
-    res.send("run() function was called");
+   
 });
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
