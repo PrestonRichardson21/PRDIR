@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Files</title>
+    <link rel="stylesheet" href="/Program/style.css" type="text/css">
+</head>
+<body>
+    <h1>Upload Excel and XML Files</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="excelFile">Excel File:</label>
+        <input type="file" name="excelFile" id="excelFile" accept=".xlsx,.xls"><br><br>
+        <label for="xmlFile">XML File:</label>
+        <input type="file" name="xmlFile" id="xmlFile" accept=".xml"><br><br>
+        <input type="submit" value="Upload">
+    </form>
+</body>
+</html>
